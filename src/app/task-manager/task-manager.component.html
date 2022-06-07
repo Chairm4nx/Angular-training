@@ -1,0 +1,96 @@
+<div class="container">
+  <mat-toolbar>
+    <span class="fill-remaining-space"></span>
+    <span>Task Management</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar>
+</div>
+
+<br>
+<div class="search-div">
+  <button color="primary" (click)="openDialog('Add')" mat-raised-button>
+    <mat-icon>add</mat-icon>Create
+  </button>
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <br>
+
+  <div class="mat-elevation-z3">
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+
+      <!-- Date Created Column -->
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef> Date Created</th>
+        <td mat-cell *matCellDef="let element"> {{element.created | date: 'short'}} </td>
+      </ng-container>
+
+      <!-- Date Modified Column -->
+      <ng-container matColumnDef="modified">
+        <th mat-header-cell *matHeaderCellDef> Date Modified </th>
+        <td mat-cell *matCellDef="let element"> {{element.modified | date: 'short'}} </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let task"
+          [ngStyle]="{'color':task.status=='Done' ? 'green' : task.status=='In Progress' ? 'orange' : 'blue'}">
+          <mat-icon *ngIf="task.status === 'Done'" style="color:green;">check_circle</mat-icon>
+          <mat-icon *ngIf="task.status === 'In Progress'" style="color: orange;">build</mat-icon>
+          <mat-icon *ngIf="task.status === 'New'" style="color: blue;">note_add</mat-icon>
+          {{task.status}}
+        </td>
+      </ng-container>
+
+      <!-- Rating  Column -->
+      <ng-container matColumnDef="completionRating">
+        <th mat-header-cell *matHeaderCellDef> Completion Rating </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.status == 'Done'">
+            <app-rating> </app-rating>
+          </ng-container>
+        </td>
+      </ng-container>
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let element">
+          <button (click)="openDialog('Edit', element)" mat-icon-button color="primary">
+            <mat-icon>launch</mat-icon>
+          </button>
+          <button *ngIf="element.status != 'Done'" (click)="deleteDialog()" mat-icon-button color="warn">
+            <mat-icon>delete </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
