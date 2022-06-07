@@ -1,0 +1,44 @@
+
+<div class="task-dialog-container">
+    <h1>{{title}}</h1>
+   
+    <div [formGroup]="taskManagerFormGroup" class="form-container">
+        <mat-form-field class="form-field-item full-width"  appearance="outline">
+            <mat-label>Task Name</mat-label>
+            <input matInput formControlName="name" placeholder="Name">
+            <mat-error *ngIf="taskManagerFormGroup.controls['name'].hasError('required')">Name is required</mat-error>
+        </mat-form-field> 
+        
+        <mat-form-field class="form-field-item full-width" appearance="outline">
+            <mat-label>Task Description</mat-label>
+            <textarea matInput formControlName="description" placeholder="Input your description here"></textarea>
+            <mat-error *ngIf="taskManagerFormGroup.controls['description'].hasError('required')">Description is required</mat-error>
+        </mat-form-field>
+
+        <div class="add-bottom-padding">
+            <mat-radio-group formControlName="status">
+                <mat-label>Status</mat-label> <br>
+                <mat-radio-button value="1">New </mat-radio-button>
+                <mat-radio-button value="2">In Progress</mat-radio-button>
+                <mat-radio-button value="3">Done</mat-radio-button>
+                <mat-error *ngIf="taskManagerFormGroup.controls['status'].hasError('required')">Status is required</mat-error>
+            </mat-radio-group>
+        </div>
+<br>
+        <mat-form-field appearance="outline">
+            <mat-label>Date Created</mat-label>
+            <input matInput formControlName="dateCreated" [matDatepicker]="picker">
+            <mat-error *ngIf="taskManagerFormGroup.controls['dateCreated'].hasError('required')">Date is required</mat-error>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+    </div>
+    <div class="task-dialog-footer">
+        <div mat-dialog-actions>
+            <button (click)="save()" [disabled]="taskManagerFormGroup.invalid" mat-flat-button
+                color="primary">Save</button>
+            <button (click)="cancel()" mat-flat-button>Cancel</button>
+        </div>
+    </div>
+</div>
